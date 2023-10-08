@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use App\Repositories\TaskRepository;
 use App\Http\Requests\TaskStoreRequest;
+use App\Http\Requests\TaskUpdateRequest;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -22,30 +23,22 @@ class TaskController extends Controller
     {
         $request_params = $request->all();
 
-        $activeUser = auth()->user();
+       /*  $activeUser = auth()->user();
         $default_params = [
-            'user_id' => $activeUser->id
+            'user_id' => $activeUser?->id ?? 1,
         ];
         
-        $combined_params = array_merge($default_params, $request_params);
+        $combined_params = array_merge($default_params, $request_params); */
         
         // Fetch Data
-        $tasks = $this->taskRepository->getAll($combined_params);
+        $tasks = $this->taskRepository->getAll($request_params);
         
-        $payload = array(
+        $payload = [
             'tasks' => $tasks,
-        );
+        ];
         return response()->success($payload);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request)
-    {
-        // $task = $this->taskRepository->add($request->all());
-        // return response()->json(['task' => $task]);
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -53,12 +46,12 @@ class TaskController extends Controller
     public function store(TaskStoreRequest $request)
     {
         $validatedData = $request->validated();
-        $validatedData['user_id'] = auth()->id();
+        $validatedData['user_id'] = auth()->id() ?? 1;
         $task = $this->taskRepository->add($validatedData);
         
-        $payload = array(
+        $payload = [
             'task' => $task
-        );
+        ];
         return response()->created($payload);
     }
 
@@ -67,32 +60,29 @@ class TaskController extends Controller
      */
     public function show(Task $task)        
     {
-        // $task = $this->taskRepository->add($request->all());
-        
-        return response()->json(['task' => $task]);
+        if(!$task)
+            return response()->noContent();
+
+        $payload = [
+            'task' => $task
+        ];
+        return response()->success($payload);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Task $task)
-    {
-        return response()->json(['task' => $task]);
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(TaskStoreRequest $request, Task $task)
+    public function update(TaskUpdateRequest $request, Task $task)
     {
         if(!$task)
             return response()->noContent();
         
         $this->taskRepository->update($request->validated(), $task->id);
         
-        $payload = array(
+        $payload = [
             'task' => $task->refresh()
-        );
+        ];
         return response()->created($payload);
     }
 
