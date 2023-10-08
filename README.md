@@ -1,6 +1,6 @@
 # Task Management App
 
-It is a simple task management app written in Larav
+It is a simple task management app written in Laravel
 
 ## Setup
 
