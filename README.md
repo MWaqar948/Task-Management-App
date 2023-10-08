@@ -7,7 +7,7 @@ It is a simple task management app written in Laravel
 Clone this app repository
 
 ```bash
-git clone http://github.com/tasks-app
+git clone https://github.com/MWaqar948/Task-Management-App.git
 ```
 Install composer dependencies
 
@@ -46,11 +46,11 @@ npm install
 ```
 
 ## Run
-Start up the laravel server
+Start up the laravel server in a terminal
 ```bash
 php artisan serve
 ```
-Start node server
+Start node server in another terminal
 ```bash
 npm run dev
 ```
@@ -59,7 +59,7 @@ Open this URL in browser
 http://localhost:8000
 ```
 ## Testing
-Run test command in terminal
+Run test command in terminal to run unit tests
 ```bash
 php artisan test
 ```
