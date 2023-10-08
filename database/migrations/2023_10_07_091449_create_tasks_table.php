@@ -17,7 +17,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->date('due_date')->nullable();
             $table->string('status')->default('pending');
-            $table->unsignedBigInteger('user_id');
             $table->timestamps();
         });
     }

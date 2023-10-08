@@ -3,14 +3,24 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+use App\Models\User;
 
 class TaskTest extends TestCase
 {
+    protected static $token;
+
     /**
-     * A basic unit test example.
+     * Setup Resources for Tests
      */
+    public function setUp(): void
+    {
+        parent::setUp();
+        $user = User::factory()->create();
+        self::$token = $user->createToken('Todo-app')->plainTextToken;
+    }
+
     /**
-     * A basic unit test example.
+     * Task Store Test.
      */
     public function test_store(): void
     {
@@ -19,8 +29,8 @@ class TaskTest extends TestCase
             "description" => "This task for db Schema",
             "due_date" => "2023-10-07",
         ];
-        
-        $response = $this->postJson(route('tasks.store'), $task);
+
+        $response = $this->withHeader('Authorization', 'Bearer ' . self::$token)->postJson(route('tasks.store'), $task);
  
         $response
             ->assertStatus(201)
@@ -29,8 +39,13 @@ class TaskTest extends TestCase
             ]);
     }
 
+    /**
+     * Task Update Test.
+     */
     public function test_update(): void
     {
+        $user = User::find(1);
+        $token = $user->createToken('Todo-app')->plainTextToken;
         $task = [
             "title" => "Create DB SChema",
             "description" => "This task for db Schema",
@@ -38,7 +53,7 @@ class TaskTest extends TestCase
             "status" => "in-progress",
         ];
         
-        $response = $this->putJson(route('tasks.update', ['task' => 1]), $task);
+        $response = $this->withHeader('Authorization', 'Bearer ' . self::$token)->putJson(route('tasks.update', ['task' => 1]), $task);
  
         $response
             ->assertStatus(201)
@@ -47,9 +62,13 @@ class TaskTest extends TestCase
             ]);
     }
     
+    /**
+     * Task Delete Test.
+     */
     public function test_delete(): void
-    {   
-        $response = $this->deleteJson(route('tasks.destroy', ['task' => 1]));
+    { 
+
+        $response = $this->withHeader('Authorization', 'Bearer ' . self::$token)->deleteJson(route('tasks.destroy', ['task' => 1]));
  
         $response->assertStatus(204);
     }

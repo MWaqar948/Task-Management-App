@@ -70,8 +70,13 @@ export default {
         this.showtask()
     },
     methods:{
-        async showtask(){
-            await this.axios.get(`/api/tasks/${this.$route.params.id}`).then(response=>{
+        showtask(){
+            const config = {
+                headers: {
+                    Authorization: 'Bearer ' + this.$store.getters.getToken,
+                }
+            };
+            this.axios.get(`/api/tasks/${this.$route.params.id}`, config).then(response=>{
                 const { title, description, status, due_date } = response.data.task;
                 this.task.title = title
                 this.task.description = description
@@ -81,9 +86,14 @@ export default {
                 console.log(error)
             })
         },
-        async update(){
-            await this.axios.post(`/api/tasks/${this.$route.params.id}`,this.task).then(response=>{
-                this.$router.push({name:"taskList"})
+        update(){
+            const config = {
+                headers: {
+                    Authorization: 'Bearer ' + this.$store.getters.getToken,
+                }
+            };
+            this.axios.post(`/api/tasks/${this.$route.params.id}`,this.task, config).then(response=>{
+                this.$router.push({name:"Home"})
             }).catch(error=>{
                 console.log(error)
                 if (error.response.status === 422){

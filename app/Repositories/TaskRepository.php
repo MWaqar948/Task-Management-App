@@ -11,11 +11,7 @@ class TaskRepository
      */
     function getAll($params)
     {
-        $user_id = $params['user_id'] ?? null;
-
-        return Task::when($user_id, function($query, $user_id){
-            $query->where('user_id', $user_id);
-        })->get();
+        return Task::paginate(10);
     }
 
     /** 

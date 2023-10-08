@@ -14,6 +14,9 @@ class AuthController extends Controller
         $this->userRepository = $userRepository;
     }
     
+    /**
+     * Registers a new user
+     */
     public function register(UserStoreRequest $request){
         $validatedData =  $request->validated();
         $user = $this->userRepository->save($validatedData);
@@ -22,6 +25,9 @@ class AuthController extends Controller
         return response()->success(['user' => $user, 'token' => $token]);
     }
 
+    /**
+     * Login an existing user
+     */
     public function login(Request $request){
         $data = [
             'email' => $request->email,
@@ -35,5 +41,14 @@ class AuthController extends Controller
         $token = auth()->user()->createToken('Todo-app')->plainTextToken;
 
         return response()->success(['user' => auth()->user(), 'token' => $token]);
+    }
+
+    /**
+     * Logout a user
+     */
+    public function logout(Request $request){
+       
+        auth()->user()->tokens()->delete();
+        return response()->logout();
     }
 }

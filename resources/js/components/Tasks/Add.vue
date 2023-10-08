@@ -58,16 +58,20 @@ export default {
             task:{
                 title:"",
                 description:"",
-                // status:"",
                 due_date:"",
             },
             errors: {},
         }
     },
     methods:{
-        async create(){
-            await this.axios.post('/api/tasks',this.task).then(response=>{
-                this.$router.push({name:"taskList"})
+        create(){
+            const config = {
+                headers: {
+                    Authorization: 'Bearer ' + this.$store.getters.getToken,
+                }
+            };
+            this.axios.post('/api/tasks',this.task, config).then(response=>{
+                this.$router.push({name:"Home"})
             }).catch(error=>{
                 console.log(error)
                 if (error.response.status === 422){

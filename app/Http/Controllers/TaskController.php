@@ -14,6 +14,7 @@ class TaskController extends Controller
 
     public function __construct(TaskRepository $taskRepository) {
         $this->taskRepository = $taskRepository;
+        $this->middleware('auth:sanctum')->except(['index']);
     }
     
     /**
@@ -22,21 +23,11 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         $request_params = $request->all();
-
-       /*  $activeUser = auth()->user();
-        $default_params = [
-            'user_id' => $activeUser?->id ?? 1,
-        ];
-        
-        $combined_params = array_merge($default_params, $request_params); */
         
         // Fetch Data
         $tasks = $this->taskRepository->getAll($request_params);
         
-        $payload = [
-            'tasks' => $tasks,
-        ];
-        return response()->success($payload);
+        return response()->success($tasks);
     }
 
 
@@ -46,7 +37,6 @@ class TaskController extends Controller
     public function store(TaskStoreRequest $request)
     {
         $validatedData = $request->validated();
-        $validatedData['user_id'] = auth()->id() ?? 1;
         $task = $this->taskRepository->add($validatedData);
         
         $payload = [
