@@ -61,7 +61,7 @@ class TaskController extends Controller
     public function show(Task $task)        
     {
         if(!$task)
-            return response()->noContent();
+            return response()->notFound();
 
         $payload = [
             'task' => $task
@@ -76,7 +76,7 @@ class TaskController extends Controller
     public function update(TaskUpdateRequest $request, Task $task)
     {
         if(!$task)
-            return response()->noContent();
+            return response()->notFound();
         
         $this->taskRepository->update($request->validated(), $task->id);
         
@@ -92,7 +92,7 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         if(!$task)
-            return response()->noContent();
+            return response()->notFound();
 
         $task = $this->taskRepository->delete($task->id);
         return response()->deleted();
